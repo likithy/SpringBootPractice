@@ -1,0 +1,9 @@
+<html xmlns:form="http://www.w3.org/1999/html">
+<head>
+    <link href="webjars/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="webjars/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.standalone.min.css" rel="stylesheet">
+    <title>
+        All Todos !!!
+    </title>
+</head>
+<body>
