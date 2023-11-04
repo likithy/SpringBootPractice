@@ -15,11 +15,15 @@ Add new Todo !!!
     </fieldset>
     <fieldset class="mb-3">
         <form:label path="targetDate">Target Date :</form:label>
-        <form:input name="targetDate" type="text" class="input-group" required="required" path="targetDate"/>
+        <form:input name="targetDate" type="date" class="input-group" required="required" path="targetDate"/>
         <form:errors path="targetDate" cssClass="text-bg-danger"/>
     </fieldset>
-    <form:input path="id" type="hidden"/>
-    <form:input path="done" type="hidden"/>
+    <fieldset>
+        <form:label path="done">Done :</form:label>
+        <form:checkbox path="done" />
+        <form:errors path="done" cssClass="text-bg-danger"/>
+    </fieldset>
+    <br>
     <input class="btn btn-primary btn-outline" type="submit">
 </form:form>
 </div>

@@ -18,7 +18,7 @@ public class SpringSecurityConfig {
   public InMemoryUserDetailsManager createUserDetailsManager() {
     UserDetails userDetails = createNewUser("likith", "1234");
     UserDetails userDetails1 = createNewUser("likith1", "test");
-    return new InMemoryUserDetailsManager(userDetails,userDetails1);
+    return new InMemoryUserDetailsManager(userDetails, userDetails1);
   }
 
   public UserDetails createNewUser(String userName, String password) {
@@ -39,14 +39,15 @@ public class SpringSecurityConfig {
   public PasswordEncoder encodePassword() {
     return new BCryptPasswordEncoder();
   }
-
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity.authorizeHttpRequests(
-            auth->auth.anyRequest().authenticated());
-    httpSecurity.formLogin(withDefaults());
-    httpSecurity.csrf(csrf->csrf.disable());
-    httpSecurity.headers(header->header.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()));
-    return httpSecurity.build();
-  }
+  // uncomment to use h2 database
+  //  @Bean
+  //  public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+  //    httpSecurity.authorizeHttpRequests(
+  //            auth->auth.anyRequest().authenticated());
+  //    httpSecurity.formLogin(withDefaults());
+  //    httpSecurity.csrf(csrf->csrf.disable());
+  //    httpSecurity.headers(header->header.frameOptions(frameOptionsConfig ->
+  // frameOptionsConfig.disable()));
+  //    return httpSecurity.build();
+  //  }
 }

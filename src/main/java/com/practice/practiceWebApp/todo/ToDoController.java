@@ -3,6 +3,7 @@ package com.practice.practiceWebApp.todo;
 import com.practice.practiceWebApp.model.ToDoRepository;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,17 +16,18 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ToDoController {
   private ToDoService toDoService;
-  private ToDoRepository repository;
   private Logger logger = LoggerFactory.getLogger(getClass());
 
   public ToDoController(ToDoService toDoService, ToDoRepository repository) {
     this.toDoService = toDoService;
-    this.repository = repository;
   }
 
   @RequestMapping(value = "list-todos")
   public String listToDos(ModelMap map) {
-    map.put("toDos", repository.findAll());
+    if(map.getAttribute("userName")==null){
+      map.addAttribute("userName",getLoggedInUserName());
+    }
+    map.put("toDos", toDoService.findByUserName(map.getAttribute("userName").toString()));
     return "listToDos";
   }
 
@@ -42,15 +44,14 @@ public class ToDoController {
   }
 
   @RequestMapping(value = "delete-todo")
-  public String deleteToDo(@RequestParam String description) {
-    //toDoService.removeById(id);
+  public String deleteToDo(@RequestParam String id) {
+    toDoService.removeById(id);
     return "redirect:list-todos";
   }
 
   @RequestMapping(value = "update-todo", method = RequestMethod.GET)
-  public String showUpdateToDo(ModelMap map, @RequestParam String name) {
-    //ToDo todo = toDoService.findById(id);
-    //map.put("toDo", todo);
+  public String showUpdateToDo(ModelMap map, @RequestParam String id) {
+    map.put("toDo", toDoService.findById(id));
     return "addToDo";
   }
 
@@ -59,8 +60,9 @@ public class ToDoController {
     if (result.hasErrors()) {
       return "addToDo";
     }
+
     toDoService.addNewToDo(
-        map.get("userName").toString(), toDo.getDescription(), toDo.getTargetDate(), false);
+        map.get("userName").toString(), toDo.getDescription(), toDo.getTargetDate(), toDo.isDone());
     return "redirect:list-todos";
   }
 

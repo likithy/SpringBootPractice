@@ -23,9 +23,9 @@ Please check all your To do's !!!
             <td class="table-striped">${todo.description}</td>
             <td class="table-striped">${todo.targetDate}</td>
             <td class="table-striped">${todo.done}</td>
-            <td class="table-striped"><a href="delete-todo?description=${todo.description}" class="btn btn-outline-danger">DELETE</a>
+            <td class="table-striped"><a href="delete-todo?id=${todo.id}" class="btn btn-outline-danger">DELETE</a>
             </td>
-            <td class="table-striped"><a href="update-todo?description=${todo.description}" class="btn btn-outline-success">UPDATE</a>
+            <td class="table-striped"><a href="update-todo?id=${todo.id}" class="btn btn-outline-success">UPDATE</a>
             </td>
         </tr>
     </c:forEach>

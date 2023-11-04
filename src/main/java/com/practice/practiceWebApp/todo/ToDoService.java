@@ -3,41 +3,49 @@ package com.practice.practiceWebApp.todo;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.practice.practiceWebApp.model.ToDoRepository;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ToDoService {
-  private static List<ToDo> toDos = new ArrayList<>();
-  static {
-    toDos.add(new ToDo("Likith", "Learn Spring", LocalDate.now().plusYears(1), false));
-    toDos.add(new ToDo( "Likith", "Learn Devops", LocalDate.now().plusMonths(2), false));
-    toDos.add(new ToDo( "Likith", "Learn Fullstack", LocalDate.now().plusYears(4), false));
+  private ToDoRepository repository;
+
+  public ToDoService(ToDoRepository repository) {
+    this.repository = repository;
   }
-  private static int countToDo = toDos.size();
 
   public List<ToDo> findByUserName(String userName) {
-    return toDos.stream()
-        .filter(toDo -> toDo.getUserName().equalsIgnoreCase(userName))
-        .collect(Collectors.toList());
+    return repository.findByUserName(userName);
   }
 
   public void addNewToDo(String username,String description,LocalDate targetDate,Boolean isDone){
-    toDos.add(new ToDo(username,description,targetDate,isDone));
+    repository.insert(new ToDo(username,description,targetDate,isDone));
   }
 
-//  public void removeById(int id){
-//    toDos.removeIf(toDo -> toDo.getId()==(id));
-//  }
+  public void removeById(String id){
+    repository.deleteById(id);
+  }
 
-//  public ToDo findById(int id) {
-//    return toDos.stream().filter(toDo -> toDo.getId()==id).findFirst().orElse(null);
-//  }
+  public ToDo findById(String id) {
+    return repository.findById(id).get();
+      }
 
   public void updateToDo(ToDo toDo) {
-   // removeById(toDo.getId());
-    toDos.add(toDo);
+    Optional<ToDo> todo=repository.findById(toDo.getId());
+        todo.ifPresent(
+            updatedToDo -> {
+              updatedToDo.setDescription(toDo.getDescription());
+              updatedToDo.setTargetDate(toDo.getTargetDate());
+              updatedToDo.setDone(toDo.isDone());
+            });
+    repository.save(todo.get());
+  }
+
+  public List<ToDo> listAllTodos(){
+    return repository.findAll();
   }
 }
