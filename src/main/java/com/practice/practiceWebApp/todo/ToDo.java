@@ -1,10 +1,14 @@
 package com.practice.practiceWebApp.todo;
 
 import jakarta.validation.constraints.Size;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.time.LocalDate;
 
+@Document(collection = "testcollection")
 public class ToDo {
-  private int id;
   private String userName;
 
   @Size(min = 4, message = "Enter characters minimum 4")
@@ -13,22 +17,12 @@ public class ToDo {
   private LocalDate targetDate;
   private boolean done;
 
-  public ToDo(int id, String userName, String description, LocalDate targetDate, boolean done) {
-    this.id = id;
+  public ToDo( String userName, String description, LocalDate targetDate, boolean done) {
     this.userName = userName;
     this.description = description;
     this.targetDate = targetDate;
     this.done = done;
   }
-
-  public int getId() {
-    return id;
-  }
-
-  public void setId(int id) {
-    this.id = id;
-  }
-
   public String getUserName() {
     return userName;
   }
@@ -59,23 +53,5 @@ public class ToDo {
 
   public void setDone(boolean done) {
     this.done = done;
-  }
-
-  @Override
-  public String toString() {
-    return "ToDo["
-        + "id="
-        + id
-        + ", userName='"
-        + userName
-        + '\''
-        + ", description='"
-        + description
-        + '\''
-        + ", targetDate="
-        + targetDate
-        + ", done="
-        + done
-        + ']';
   }
 }

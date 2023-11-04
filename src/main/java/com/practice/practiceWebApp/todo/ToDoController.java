@@ -1,5 +1,6 @@
 package com.practice.practiceWebApp.todo;
 
+import com.practice.practiceWebApp.model.ToDoRepository;
 import jakarta.validation.Valid;
 import java.time.LocalDate;
 import org.slf4j.Logger;
@@ -14,19 +15,21 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class ToDoController {
   private ToDoService toDoService;
+  private ToDoRepository repository;
   private Logger logger = LoggerFactory.getLogger(getClass());
 
-  public ToDoController(ToDoService toDoService) {
+  public ToDoController(ToDoService toDoService, ToDoRepository repository) {
     this.toDoService = toDoService;
+    this.repository = repository;
   }
 
   @RequestMapping(value = "list-todos")
   public String listToDos(ModelMap map) {
-    map.put("toDos", toDoService.findByUserName(getLoggedInUserName()));
+    map.put("toDos", repository.findAll());
     return "listToDos";
   }
 
-  private String getLoggedInUserName(){
+  private String getLoggedInUserName() {
     return SecurityContextHolder.getContext().getAuthentication().getName();
   }
 
@@ -34,21 +37,20 @@ public class ToDoController {
   public String viewNewToDoPage(ModelMap map) {
     map.put(
         "toDo",
-        new ToDo(
-            0, map.get("userName").toString(), "", LocalDate.now().plusYears(1), false));
+        new ToDo( map.get("userName").toString(), "", LocalDate.now().plusYears(1), false));
     return "addToDo";
   }
 
   @RequestMapping(value = "delete-todo")
-  public String deleteToDo(@RequestParam int id) {
-    toDoService.removeById(id);
+  public String deleteToDo(@RequestParam String description) {
+    //toDoService.removeById(id);
     return "redirect:list-todos";
   }
 
   @RequestMapping(value = "update-todo", method = RequestMethod.GET)
-  public String showUpdateToDo(ModelMap map, @RequestParam int id) {
-    ToDo todo = toDoService.findById(id);
-    map.put("toDo", todo);
+  public String showUpdateToDo(ModelMap map, @RequestParam String name) {
+    //ToDo todo = toDoService.findById(id);
+    //map.put("toDo", todo);
     return "addToDo";
   }
 
@@ -58,10 +60,7 @@ public class ToDoController {
       return "addToDo";
     }
     toDoService.addNewToDo(
-        map.get("userName").toString(),
-        toDo.getDescription(),
-        toDo.getTargetDate(),
-        false);
+        map.get("userName").toString(), toDo.getDescription(), toDo.getTargetDate(), false);
     return "redirect:list-todos";
   }
 
